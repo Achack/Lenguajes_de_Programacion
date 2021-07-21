@@ -191,7 +191,8 @@ void AnalizadorDeCaracter(char letra){
 		}
 
 } 
-	//Funcion que va buscar las palabras reservadas
+
+//Funcion que va buscar las palabras reservadas
 void Reservadas(){
 	for(int i=0;i<IndicadorTam;i++){
 		if(strcmp(reservadas[i],palabraIngresada)==0){
