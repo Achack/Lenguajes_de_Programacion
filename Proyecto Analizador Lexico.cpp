@@ -191,6 +191,40 @@ void AnalizadorDeCaracter(char letra){
 		}
 
 } 
+	//Funcion que va buscar las palabras reservadas
+void Reservadas(){
+	for(int i=0;i<IndicadorTam;i++){
+		if(strcmp(reservadas[i],palabraIngresada)==0){
+
+			//Contador Encender
+			if(strcmp(reservadas[0],palabraIngresada)==0)
+				contadorEncender++;
+
+			//Contador Apagar
+			if(strcmp(reservadas[1],palabraIngresada)==0)
+				contadorApagado++;
+
+			//Contador Ciclo Repeticion
+			if(strcmp(reservadas[4],palabraIngresada)==0)
+				contadorCiclos++;
+
+			//Contador Ciclo Mientras
+			if(strcmp(reservadas[6],palabraIngresada)==0)
+				contadorCiclos++;
+
+			//Contador Condicional
+			if(strcmp(reservadas[7],palabraIngresada)==0)
+				contadorCondicional++;
+
+			//Cuenta las palabras reservadas que encuentro
+			contadorPalabrasReservadas++;
+			palabraIngresada[0]='\0';
+			break;
+		}
+		if(i==(IndicadorTam)-1){
+			exit(-1);
+		}
+	}
 
 	
 
