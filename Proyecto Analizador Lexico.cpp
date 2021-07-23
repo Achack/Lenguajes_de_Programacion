@@ -231,4 +231,52 @@ void Reservadas(){
 
    
 }
+//Funcion que analiza caracter a carater y decide a que tipo de elemento pertenece
+void Estados(){
+	
+	switch(Estado){
+			case 1:contadorVariables++; 	        // Suma variables A ... Z							//Estado vuelve ser 0
+			break;
+			case 2:contadorVariables++; 	        //  A ... Z	 a ... z  0 ... 9	
+			break;
+			case 3: Reservadas();		        // Palabras reservadas
+			break;
+			case 4:contadorNumeros++; 		//Numeros 0 ... 9
+			break;
+			case 5:contadorNumeros++; 		// 0 ... 9
+			break;
+			case 6:contadorNumeros++; 		// 0 ... 9
+			break;
+			case 7:contadorSignos++;		// -
+			break;
+			case 8:contadorSignos++; 		// +
+			break;
+			case 9:contadorSimbolos++; 		// =
+			break;
+			case 10:contadorSignos++; 		// -
+			break;
+			case 11:contadorSimbolos++; 		// =
+			break;
+			case 12:contadorSimbolos++; 		// <
+			break;
+			case 14:contadorSimbolos++; 		// >
+			break;
+			case 15:contadorSimbolos++; 		// = 
+			break;
+			case 16:contadorSimbolos++; 		// =;
+			break;
+			case 17:contadorSignos++; 		// - +
+			break;
+			case 18:contadorSignos++; 		//  / * ^ !
+			break;
+			case 19:contadorSimbolos++; 		// . \n \t etc... 
+			break;
+			case 20:contadorNumeros++; 		// .   0 ... 9				Para decimal
+			break;
+			default:
+				break;
+			}	
+			
+			Estado = q0;	
+}
 
