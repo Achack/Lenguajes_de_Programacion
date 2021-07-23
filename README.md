@@ -6,8 +6,11 @@ Descripción:
 El programa consiste en lo siguiente:
 
 Encender luz led.
+
 Apagar luz led.
+
 Intensidad o cantidad de lúmenes con la que se encenderá cada led.
+
 Temporizador para hacer pausar el encendido o apagado de cada led n segundos.**
  
 
