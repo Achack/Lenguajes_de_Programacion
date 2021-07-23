@@ -231,11 +231,11 @@ void Reservadas(){
 
    
 }
-//Funcion que analiza caracter a carater y decide a que tipo de elemento pertenece
+//Funcion que se encarga de analizar caracter a carater y decide a que tipo de elemento pertenece
 void Estados(){
 	
 	switch(Estado){
-			case 1:contadorVariables++; 	        // Suma variables A ... Z							//Estado vuelve ser 0
+			case 1:contadorVariables++; 	        // Suma variables A ... Z					//Estado vuelve ser 0
 			break;
 			case 2:contadorVariables++; 	        //  A ... Z	 a ... z  0 ... 9	
 			break;
