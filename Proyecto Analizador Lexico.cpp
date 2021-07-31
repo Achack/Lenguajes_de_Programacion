@@ -3,62 +3,98 @@
 #include <stdlib.h>
 #include <string.h>
 
-void AnalizadorDeCaracter(char letra); //Funcion que leera los caracteres
-void Reservadas();//Esta funcion se encarga de buscar entre el arreglo de palabras reservadas
+void AnalizadorDeCaracter(char letra); 
+void Estados();
+void Reservadas();
 
-const char *reservadas[] = {"inicio","definir","repetir", "decimal","true","false""fin","mientras","si","sino","encender","apagar","string", "int", "boolean"}; //palabras reservadas
+const char *reservadas[] = {"encender","apagar","inicio","definir","repetir","fin","mientras","si","sino","string", "int", "boolean", "decimal","true","false"}; //arreglo de palabras reservadas
 
-int IndicadorTam=sizeof(reservadas)/sizeof(char *);//tamanio de las reservadas y el tamanio de memoria de el char
-int i; //Auxiliar de los ciclos
-char palabraIngresada[50]; //Se encarga de guardar y almacenar los caracteres concatenados 
+int IndicadorTam=sizeof(reservadas)/sizeof(char *);//El tamano de nuestras las reservadas y el tamano de memoria de el char
+int i; 
+char palabraIngresada[50]; //Se encarga de guardar y almacenar los caracteres concatenados que forman las palabras
 char temp[2]; //temporal para guardar caracteres de una cadena
-
+enum TEstados{q0,q1,q2,q3,q4,q5,q6,q7,q8,q9,q10,q11,q12,q13,q14,q15,q16,q17,q18,q19,q20};
+//iniciando el estado en q0
+TEstados Estado=q0;
+//Estos son los contadores de los elementos de la tabla
+int contadorVariables=0;
+int contadorNumeros=0;
+int contadorPalabrasReservadas=0;
+int contadorSimbolos=0;
+int contadorSignos=0;
+int contadorEncender=0;
+int contadorApagado=0;
+int contadorCiclos=0;
+int contadorCondicional=0;
 
 int main(){
+	FILE *archivoE; //Archivo de entrada (Incluy el lenguaje a analizar)
+	FILE *archivoS; //Archivo de salida (Donde se imprime la tabla)
    
-	printf("---- ANALIZADOR LEXICO en C ---\n");
+	printf("---- ANALIZADOR LEXICO en C++ ---\n");
+	printf("Preparando archivo.....\n");
+   
+	archivoE=fopen("entrada.txt", "r" ); //Abrimos el archivo que vamos a leer
+	archivoS=fopen("salida.txt", "wt"); //Preparamos el archivo de escritura
+   
+	char caracter;
+	//Validamos si el archivo existe
+    if ( archivoE == NULL ) {
+		printf ( "El archivo no fue encontrado. \n" ) ;
+     	return 1;
+   	}
+    printf( "Leyendo entrada.txt....\n" ) ;
+	printf( "Exitoso.\n" ) ;
 	
-	//Funcion para buscar en el arreglo de palabras reservadas
-	//strcmp se encarga de comparar caracter por caracter dos Strings
-	//reservadas[i] son las palabras reservadas que declaramos como variable global al inicio del programa
-	//identificados es la palabra que el analizador lexico encontro
-void Reservadas(){
-	for(int i=0;i<IndicadorTam;i++){
-		if(strcmp(reservadas[i],palabraIngresada)==0){
-		
-			//Contador Encender
-			if(strcmp(reservadas[0],palabraIngresada)==0)
-				contadorEncender++;
-			
-			//Contador Apagar
-			if(strcmp(reservadas[1],palabraIngresada)==0)
-				contadorApagado++;
-			
-			//Contadorr Ciclo Repetir
-			if(strcmp(reservadas[4],palabraIngresada)==0)
-				contadorCiclos++;
-				
-			//Contador Ciclo Mientras
-			if(strcmp(reservadas[6],palabraIngresada)==0)
-				contadorCiclos++;
-			
-			//Contador Condicional
-			if(strcmp(reservadas[7],palabraIngresada)==0)
-				contadorCondicional++;
-				
-			//Cuenta las palabras reservadas que encuentre
-			contadorPalabrasReservadas++;
-			palabraIngresada[0]='\0';
-			break;
+   	while (1){
+	   //fgetch toma el texto del archivo y itera caracter a caracter
+	  	caracter=fgetc(archivoE);
+	  	if(caracter==EOF){ //EOF:End Of File
+	  	break;
+	  	}
+	  
+		//analiza el punto y coma
+		AnalizadorDeCaracter(caracter);
+		if(caracter==';'){
+			contadorSimbolos++;
 		}
-		if(i==(IndicadorTam)-1){
-			exit(-1);
-		}
-	}		
+	}
+	i++;
+
+   
+	/*
+		La tabla es impresa de 2 maneras distintas,
+		primero es impresa en consola y despues en salida.txt
+	*/
+	//Imprimos en consola
+   	printf("\n\n**********TABLAS DE ELEMENTOS**********\n\n");   
+	printf("Palabras Reservadas: %d\n", contadorPalabrasReservadas);
+	printf("Variables: %d\n", contadorVariables);
+	printf("Numeros: %d\n", contadorNumeros);
+	printf("Aritmeticos: %d\n", contadorSignos);
+	printf("Simbolos: %d\n", contadorSimbolos);
+	printf("Encender: %d\n", contadorEncender);
+	printf("Apagado: %d\n", contadorApagado);
+	printf("Ciclos: %d\n", contadorCiclos/2);
+	printf("Condicional: %d\n", contadorCondicional/2);
+			
+	fputs("\n\n**********TABLAS DE ELEMENTOS**********\n\n", archivoS);
+	fprintf(archivoS, "Palabras Reservadas: %d", contadorPalabrasReservadas);
+	fprintf(archivoS, "\nVariables: %d", contadorVariables);
+	fprintf(archivoS, "\nNumeros: %d", contadorNumeros);
+	fprintf(archivoS, "\nAritmeticos: %d", contadorSignos);
+	fprintf(archivoS, "\nSimbolos: %d", contadorSimbolos);
+	fprintf(archivoS, "\nEncender: %d", contadorEncender);
+	fprintf(archivoS, "\nApagado: %d", contadorApagado);
+	fprintf(archivoS, "\nCiclos: %d", contadorCiclos/2);
+	fprintf(archivoS, "\nCondicional: %d", contadorCondicional/2);
+			
 }
 
+
 void AnalizadorDeCaracter(char letra){
-	if(letra==32||letra=='}'||letra=='{'
+		
+		if(letra==32||letra=='}'||letra=='{'
 		||letra=='('||letra==')'||letra==';'){
 			Estados();
 		}
@@ -190,34 +226,36 @@ void AnalizadorDeCaracter(char letra){
 			} 
 		}
 
-} 
+}  // FINAL
 
-//Funcion que va buscar las palabras reservadas
+
+//Funcion encargada de buscar en nuestro arreglo de palabras reservadas
 void Reservadas(){
 	for(int i=0;i<IndicadorTam;i++){
+		//strcmp se encarga de comparar caracter por caracter dos Strings
+		//reservadas[i] son las palabras reservadas que declaramos como variable global al inicio del programa
+		//identificados es la palabra que el analizador lexico encontro
 		if(strcmp(reservadas[i],palabraIngresada)==0){
-
-			//Contador Encender
+			//Contar Encender
 			if(strcmp(reservadas[0],palabraIngresada)==0)
 				contadorEncender++;
-
-			//Contador Apagar
+			//Contar Apagar
 			if(strcmp(reservadas[1],palabraIngresada)==0)
 				contadorApagado++;
-
-			//Contador Ciclo Repeticion
+			
+			//Contar Ciclo Repetir
 			if(strcmp(reservadas[4],palabraIngresada)==0)
 				contadorCiclos++;
-
-			//Contador Ciclo Mientras
+				
+			//Contar Ciclo Mientras
 			if(strcmp(reservadas[6],palabraIngresada)==0)
 				contadorCiclos++;
-
-			//Contador Condicional
+			
+			//Contar Condicional
 			if(strcmp(reservadas[7],palabraIngresada)==0)
 				contadorCondicional++;
-
-			//Cuenta las palabras reservadas que encuentro
+			
+			//Cuenta las palabras reservadas que encuentre
 			contadorPalabrasReservadas++;
 			palabraIngresada[0]='\0';
 			break;
@@ -225,21 +263,55 @@ void Reservadas(){
 		if(i==(IndicadorTam)-1){
 			exit(-1);
 		}
-	}
-
-	
-
-   
+	}		
 }
-//Funcion que se encarga de analizar caracter a carater y decide a que tipo de elemento pertenece
+
+
+void Reservadas(){
+	for(int i=0;i<IndicadorTam;i++){
+		//strcmp se encarga de comparar caracter por caracter dos Strings
+		//reservadas[i] son las palabras reservadas que declaramos como variable global al inicio del programa
+		//identificados es la palabra que el analizador lexico encontro
+		if(strcmp(reservadas[i],palabraIngresada)==0){
+			//Contar Encender
+			if(strcmp(reservadas[0],palabraIngresada)==0)
+				contadorEncender++;
+			//Contar Apagar
+			if(strcmp(reservadas[1],palabraIngresada)==0)
+				contadorApagado++;
+			
+			//Contar Ciclo Repetir
+			if(strcmp(reservadas[4],palabraIngresada)==0)
+				contadorCiclos++;
+				
+			//Contar Ciclo Mientras
+			if(strcmp(reservadas[6],palabraIngresada)==0)
+				contadorCiclos++;
+			
+			//Contar Condicional
+			if(strcmp(reservadas[7],palabraIngresada)==0)
+				contadorCondicional++;
+			
+			//Cuenta las palabras reservadas que encuentre
+			contadorPalabrasReservadas++;
+			palabraIngresada[0]='\0';
+			break;
+		}
+		if(i==(IndicadorTam)-1){
+			exit(-1);
+		}
+	}		
+}
+
+//Funcion que analiza caracter a carater y decide a que tipo de elemento pertenec
 void Estados(){
 	
 	switch(Estado){
-			case 1:contadorVariables++; 	        // Suma variables A ... Z					//Estado vuelve ser 0
+			case 1:contadorVariables++; 	// Suma variables A ... Z							//Estado vuelve ser 0
 			break;
-			case 2:contadorVariables++; 	        //  A ... Z	 a ... z  0 ... 9	
+			case 2:contadorVariables++; 	//  A ... Z	 a ... z  0 ... 9	
 			break;
-			case 3: Reservadas();		        // Palabras reservadas
+			case 3: Reservadas();		// Palabras reservadas
 			break;
 			case 4:contadorNumeros++; 		//Numeros 0 ... 9
 			break;
@@ -247,13 +319,13 @@ void Estados(){
 			break;
 			case 6:contadorNumeros++; 		// 0 ... 9
 			break;
-			case 7:contadorSignos++;		// -
+			case 7:contadorSignos++;			// -
 			break;
-			case 8:contadorSignos++; 		// +
+			case 8:contadorSignos++; 			// +
 			break;
-			case 9:contadorSimbolos++; 		// =
+			case 9:contadorSimbolos++; 			// =
 			break;
-			case 10:contadorSignos++; 		// -
+			case 10:contadorSignos++; 			// -
 			break;
 			case 11:contadorSimbolos++; 		// =
 			break;
@@ -265,13 +337,13 @@ void Estados(){
 			break;
 			case 16:contadorSimbolos++; 		// =;
 			break;
-			case 17:contadorSignos++; 		// - +
+			case 17:contadorSignos++; 			// - +
 			break;
-			case 18:contadorSignos++; 		//  / * ^ !
+			case 18:contadorSignos++; 			//  / * ^ !
 			break;
 			case 19:contadorSimbolos++; 		// . \n \t etc... 
 			break;
-			case 20:contadorNumeros++; 		// .   0 ... 9				Para decimal
+			case 20:contadorNumeros++; 			// .   0 ... 9				Para decimal
 			break;
 			default:
 				break;
@@ -279,4 +351,3 @@ void Estados(){
 			
 			Estado = q0;	
 }
-
